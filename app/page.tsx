@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { DEFAULT_SCRIPT } from "@/types/teleprompter";
 import { useTeleprompterSettings } from "@/hooks/useTeleprompterSettings";
 import { useAutoScroll } from "@/hooks/useAutoScroll";
@@ -8,24 +9,26 @@ import { useManualScroll } from "@/hooks/useManualScroll";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { useLineTracker } from "@/hooks/useLineTracker";
 import { useMouseTracker } from "@/hooks/useMouseTracker";
-import { ScriptEditor } from "@/components/teleprompter/ScriptEditor";
 import { SettingsOverlay } from "@/components/teleprompter/SettingsOverlay";
 import { TeleprompterDisplay } from "@/components/teleprompter/TeleprompterDisplay";
 import { ControlPanel } from "@/components/teleprompter/ControlPanel";
 import { ErrorBoundary } from "@/components/teleprompter/ErrorBoundary";
 
 export default function TeleprompterApp() {
-  const [script, setScript] = useState(() => {
-    if (typeof window === "undefined") return DEFAULT_SCRIPT;
+  const router = useRouter();
+  const [script, setScript] = useState(DEFAULT_SCRIPT);
+  const scriptLoadedRef = useRef(false);
+
+  useEffect(() => {
     try {
-      return localStorage.getItem("teleprompter-script") ?? DEFAULT_SCRIPT;
-    } catch {
-      return DEFAULT_SCRIPT;
-    }
-  });
+      const stored = localStorage.getItem("teleprompter-script");
+      if (stored) setScript(stored);
+    } catch {}
+    scriptLoadedRef.current = true;
+  }, []);
+
   const [isPlaying, setIsPlaying] = useState(false);
   const [pendingRestart, setPendingRestart] = useState(false);
-  const [showEditor, setShowEditor] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [isAtEnd, setIsAtEnd] = useState(false);
   const [manualScrollDirection, setManualScrollDirection] = useState<
@@ -35,6 +38,7 @@ export default function TeleprompterApp() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!scriptLoadedRef.current) return;
     try {
       localStorage.setItem("teleprompter-script", script);
     } catch {}
@@ -122,8 +126,7 @@ export default function TeleprompterApp() {
     isPlaying,
     setIsPlaying,
     isAtEnd,
-    showEditor,
-    setShowEditor,
+    onEdit: () => router.push("/scripts"),
     showSettings,
     setShowSettings,
     scrollMode: settings.scrollMode,
@@ -149,14 +152,6 @@ export default function TeleprompterApp() {
       className="min-h-screen relative overflow-hidden"
       style={{ backgroundColor: settings.backgroundColor }}
     >
-      {showEditor && (
-        <ScriptEditor
-          script={script}
-          onScriptChange={setScript}
-          onClose={() => setShowEditor(false)}
-        />
-      )}
-
       {showSettings && (
         <SettingsOverlay onClose={() => setShowSettings(false)} />
       )}
@@ -181,7 +176,8 @@ export default function TeleprompterApp() {
           onPlay={handleStart}
           onPause={handlePause}
           onRestart={handleRestart}
-          onEdit={() => setShowEditor(true)}
+          onEdit={() => router.push("/scripts")}
+          onScripts={() => router.push("/scripts")}
           onSettings={() => setShowSettings(true)}
           onScrollModeChange={setScrollMode}
           onAdjustSpeed={adjustSpeed}

@@ -1,5 +1,14 @@
 export type ScrollMode = "auto" | "manual";
 
+export interface Script {
+  id: string;
+  title: string;
+  content: string; // BlockNote JSON
+  plainText: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export type CueIndicatorStyle =
   | "line"
   | "arrow-left"

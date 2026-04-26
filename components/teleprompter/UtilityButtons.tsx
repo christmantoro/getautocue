@@ -2,12 +2,13 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Edit3, FlipHorizontal, FlipVertical, Maximize, Minimize, Settings } from "lucide-react";
+import { BookOpen, Edit3, FlipHorizontal, FlipVertical, Maximize, Minimize, Settings } from "lucide-react";
 
 interface UtilityButtonsProps {
   flipHorizontal: boolean;
   flipVertical: boolean;
   onEdit: () => void;
+  onScripts: () => void;
   onToggleFlipHorizontal: () => void;
   onToggleFlipVertical: () => void;
   onSettings: () => void;
@@ -17,6 +18,7 @@ export function UtilityButtons({
   flipHorizontal,
   flipVertical,
   onEdit,
+  onScripts,
   onToggleFlipHorizontal,
   onToggleFlipVertical,
   onSettings,
@@ -39,6 +41,16 @@ export function UtilityButtons({
 
   return (
     <div className="flex items-center gap-2">
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={onScripts}
+        className="text-white hover:text-white hover:bg-white/20 p-2"
+        title="My Scripts"
+      >
+        <BookOpen className="w-4 h-4" />
+      </Button>
+
       <Button
         variant="ghost"
         size="sm"

@@ -25,6 +25,7 @@ interface ControlPanelProps {
   onPause: () => void;
   onRestart: () => void;
   onEdit: () => void;
+  onScripts: () => void;
   onSettings: () => void;
   onScrollModeChange: (mode: ScrollMode) => void;
   onAdjustSpeed: (direction: "up" | "down") => void;
@@ -49,6 +50,7 @@ export function ControlPanel({
   onPause,
   onRestart,
   onEdit,
+  onScripts,
   onSettings,
   onScrollModeChange,
   onAdjustSpeed,
@@ -149,6 +151,7 @@ export function ControlPanel({
             flipHorizontal={settings.flipHorizontal}
             flipVertical={settings.flipVertical}
             onEdit={onEdit}
+            onScripts={onScripts}
             onToggleFlipHorizontal={onToggleFlipHorizontal}
             onToggleFlipVertical={onToggleFlipVertical}
             onSettings={onSettings}

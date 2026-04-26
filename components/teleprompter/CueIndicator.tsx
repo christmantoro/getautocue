@@ -19,7 +19,7 @@ export function CueIndicator({ style, position, color }: CueIndicatorProps) {
     case "line":
       return (
         <div
-          className="absolute left-0 right-0 h-px pointer-events-none z-50"
+          className="fixed left-0 right-0 h-px pointer-events-none z-50"
           style={{
             top: topPosition,
             backgroundColor: color,
@@ -32,7 +32,7 @@ export function CueIndicator({ style, position, color }: CueIndicatorProps) {
     case "arrow-left":
       return (
         <div
-          className="absolute left-4 pointer-events-none z-50"
+          className="fixed left-4 pointer-events-none z-50"
           style={{ top: topPosition, transform: "translateY(-50%)" }}
         >
           <svg
@@ -51,7 +51,7 @@ export function CueIndicator({ style, position, color }: CueIndicatorProps) {
     case "arrow-right":
       return (
         <div
-          className="absolute right-4 pointer-events-none z-50"
+          className="fixed right-4 pointer-events-none z-50"
           style={{ top: topPosition, transform: "translateY(-50%)" }}
         >
           <svg
@@ -70,7 +70,7 @@ export function CueIndicator({ style, position, color }: CueIndicatorProps) {
     case "bracket-left":
       return (
         <div
-          className="absolute left-4 pointer-events-none z-50"
+          className="fixed left-4 pointer-events-none z-50"
           style={{ top: topPosition, transform: "translateY(-50%)" }}
         >
           <svg
@@ -89,7 +89,7 @@ export function CueIndicator({ style, position, color }: CueIndicatorProps) {
     case "bracket-right":
       return (
         <div
-          className="absolute right-4 pointer-events-none z-50"
+          className="fixed right-4 pointer-events-none z-50"
           style={{ top: topPosition, transform: "translateY(-50%)" }}
         >
           <svg

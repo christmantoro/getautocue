@@ -16,18 +16,33 @@ import {
 } from "@/types/teleprompter";
 
 export function useTeleprompterSettings() {
-  const [settings, setSettings] = useState<TeleprompterSettings>(() => {
-    if (typeof window === "undefined") return DEFAULT_SETTINGS;
+  const [settings, setSettings] = useState<TeleprompterSettings>(DEFAULT_SETTINGS);
+  const currentSettingsRef = useRef(settings);
+  const skipNextSaveRef = useRef(true); // skip the initial DEFAULT_SETTINGS save
+
+  // Load from localStorage once on mount
+  useEffect(() => {
     try {
       const stored = localStorage.getItem("teleprompter-settings");
-      if (stored) return { ...DEFAULT_SETTINGS, ...JSON.parse(stored) };
-    } catch {}
-    return DEFAULT_SETTINGS;
-  });
-  const currentSettingsRef = useRef(settings);
+      if (stored) {
+        setSettings({ ...DEFAULT_SETTINGS, ...JSON.parse(stored) });
+      } else {
+        // No stored settings — allow saving from now on
+        skipNextSaveRef.current = false;
+      }
+    } catch {
+      skipNextSaveRef.current = false;
+    }
+  }, []);
 
+  // Persist on every settings change, skipping the initial mount and the first
+  // render that applies the loaded value (which we don't need to re-save).
   useEffect(() => {
     currentSettingsRef.current = settings;
+    if (skipNextSaveRef.current) {
+      skipNextSaveRef.current = false;
+      return;
+    }
     try {
       localStorage.setItem("teleprompter-settings", JSON.stringify(settings));
     } catch {}

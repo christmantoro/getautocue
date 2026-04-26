@@ -5,8 +5,7 @@ interface UseKeyboardShortcutsParams {
   isPlaying: boolean;
   setIsPlaying: (v: boolean) => void;
   isAtEnd: boolean;
-  showEditor: boolean;
-  setShowEditor: (v: boolean) => void;
+  onEdit: () => void;
   showSettings: boolean;
   setShowSettings: (v: boolean) => void;
   scrollMode: ScrollMode;
@@ -29,8 +28,7 @@ export function useKeyboardShortcuts({
   isPlaying,
   setIsPlaying,
   isAtEnd,
-  showEditor,
-  setShowEditor,
+  onEdit,
   showSettings,
   setShowSettings,
   scrollMode,
@@ -59,7 +57,7 @@ export function useKeyboardShortcuts({
         return;
       }
 
-      if (showEditor || showSettings) {
+      if (showSettings) {
         if (e.key !== "Escape") return;
       }
 
@@ -121,11 +119,10 @@ export function useKeyboardShortcuts({
           break;
         case "e":
           e.preventDefault();
-          setShowEditor(!showEditor);
+          onEdit();
           break;
         case "escape":
           e.preventDefault();
-          setShowEditor(false);
           setShowSettings(false);
           break;
         case "+":
@@ -153,7 +150,7 @@ export function useKeyboardShortcuts({
         return;
       }
 
-      if (showEditor || showSettings) return;
+      if (showSettings) return;
 
       keysPressed.current.delete(e.key.toLowerCase());
 
@@ -173,13 +170,12 @@ export function useKeyboardShortcuts({
     };
   }, [
     isPlaying,
-    showEditor,
     showSettings,
     scrollMode,
     manualScrollDirection,
     setIsPlaying,
     setManualScrollDirection,
-    setShowEditor,
+    onEdit,
     setShowSettings,
     handleStart,
     handlePause,
